@@ -1,30 +1,30 @@
-// unsigned long PackRGBA(): Helper method that packs RGBA channels into a single 4 byte pixel.
+// unsigned int PackRGBA(): Helper method that packs RGBA channels into a single 4 byte pixel.
 //
 // unsigned char r:     red channel.
 // unsigned char g:     green channel.
 // unsigned char b:     blue channel.
 // unsigned char a:     alpha channel.
 
-unsigned long PackRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
+unsigned int PackRGBA(unsigned char r, unsigned char g, unsigned char b, unsigned char a)
 {
     return ((r << 24) | (g << 16) | (b << 8) | a);
 }
 
 // void DecompressBlockDXT1(): Decompresses one block of a DXT1 texture and stores the resulting pixels at the appropriate offset in 'image'.
 //
-// unsigned long x:                     x-coordinate of the first pixel in the block.
-// unsigned long y:                     y-coordinate of the first pixel in the block.
-// unsigned long width:                 width of the texture being decompressed.
-// unsigned long height:                height of the texture being decompressed.
+// unsigned int x:                     x-coordinate of the first pixel in the block.
+// unsigned int y:                     y-coordinate of the first pixel in the block.
+// unsigned int width:                 width of the texture being decompressed.
+// unsigned int height:                height of the texture being decompressed.
 // const unsigned char *blockStorage:   pointer to the block to decompress.
-// unsigned long *image:                pointer to image where the decompressed pixel data should be stored.
+// unsigned int *image:                pointer to image where the decompressed pixel data should be stored.
 
-void DecompressBlockDXT1(unsigned long x, unsigned long y, unsigned long width, const unsigned char *blockStorage, unsigned long *image)
+void DecompressBlockDXT1(unsigned int x, unsigned int y, unsigned int width, const unsigned char *blockStorage, unsigned int *image)
 {
     unsigned short color0 = *reinterpret_cast<const unsigned short *>(blockStorage);
     unsigned short color1 = *reinterpret_cast<const unsigned short *>(blockStorage + 2);
 
-    unsigned long temp;
+    unsigned int temp;
 
     temp = (color0 >> 11) * 255 + 16;
     unsigned char r0 = (unsigned char)((temp/32 + temp)/32);
@@ -40,13 +40,13 @@ void DecompressBlockDXT1(unsigned long x, unsigned long y, unsigned long width, 
     temp = (color1 & 0x001F) * 255 + 16;
     unsigned char b1 = (unsigned char)((temp/32 + temp)/32);
 
-    unsigned long code = *reinterpret_cast<const unsigned long *>(blockStorage + 4);
+    unsigned int code = *reinterpret_cast<const unsigned int *>(blockStorage + 4);
 
     for (int j=0; j < 4; j++)
     {
         for (int i=0; i < 4; i++)
         {
-            unsigned long finalColor = 0;
+            unsigned int finalColor = 0;
             unsigned char positionCode = (code >>  2*(4*j+i)) & 0x03;
 
             if (color0 > color1)
@@ -94,45 +94,45 @@ void DecompressBlockDXT1(unsigned long x, unsigned long y, unsigned long width, 
 
 // void BlockDecompressImageDXT1(): Decompresses all the blocks of a DXT1 compressed texture and stores the resulting pixels in 'image'.
 //
-// unsigned long width:                 Texture width.
-// unsigned long height:                Texture height.
+// unsigned int width:                 Texture width.
+// unsigned int height:                Texture height.
 // const unsigned char *blockStorage:   pointer to compressed DXT1 blocks.
-// unsigned long *image:                pointer to the image where the decompressed pixels will be stored.
+// unsigned int *image:                pointer to the image where the decompressed pixels will be stored.
 
-void BlockDecompressImageDXT1(unsigned long width, unsigned long height, const unsigned char *blockStorage, unsigned long *image)
+void BlockDecompressImageDXT1(unsigned int width, unsigned int height, const unsigned char *blockStorage, unsigned int *image)
 {
-    unsigned long blockCountX = (width + 3) / 4;
-    unsigned long blockCountY = (height + 3) / 4;
+    unsigned int blockCountX = (width + 3) / 4;
+    unsigned int blockCountY = (height + 3) / 4;
 
-    for (unsigned long j = 0; j < blockCountY; j++)
+    for (unsigned int j = 0; j < blockCountY; j++)
     {
-        for (unsigned long i = 0; i < blockCountX; i++) DecompressBlockDXT1(i*4, j*4, width, blockStorage + i * 8, image);
+        for (unsigned int i = 0; i < blockCountX; i++) DecompressBlockDXT1(i*4, j*4, width, blockStorage + i * 8, image);
         blockStorage += blockCountX * 8;
     }
 }
 
 // void DecompressBlockDXT5(): Decompresses one block of a DXT5 texture and stores the resulting pixels at the appropriate offset in 'image'.
 //
-// unsigned long x:                     x-coordinate of the first pixel in the block.
-// unsigned long y:                     y-coordinate of the first pixel in the block.
-// unsigned long width:                 width of the texture being decompressed.
-// unsigned long height:                height of the texture being decompressed.
+// unsigned int x:                     x-coordinate of the first pixel in the block.
+// unsigned int y:                     y-coordinate of the first pixel in the block.
+// unsigned int width:                 width of the texture being decompressed.
+// unsigned int height:                height of the texture being decompressed.
 // const unsigned char *blockStorage:   pointer to the block to decompress.
-// unsigned long *image:                pointer to image where the decompressed pixel data should be stored.
+// unsigned int *image:                pointer to image where the decompressed pixel data should be stored.
 
-void DecompressBlockDXT5(unsigned long x, unsigned long y, unsigned long width, const unsigned char *blockStorage, unsigned long *image)
+void DecompressBlockDXT5(unsigned int x, unsigned int y, unsigned int width, const unsigned char *blockStorage, unsigned int *image)
 {
     unsigned char alpha0 = *reinterpret_cast<const unsigned char *>(blockStorage);
     unsigned char alpha1 = *reinterpret_cast<const unsigned char *>(blockStorage + 1);
 
     const unsigned char *bits = blockStorage + 2;
-    unsigned long alphaCode1 = bits[2] | (bits[3] << 8) | (bits[4] << 16) | (bits[5] << 24);
+    unsigned int alphaCode1 = bits[2] | (bits[3] << 8) | (bits[4] << 16) | (bits[5] << 24);
     unsigned short alphaCode2 = bits[0] | (bits[1] << 8);
 
     unsigned short color0 = *reinterpret_cast<const unsigned short *>(blockStorage + 8);
     unsigned short color1 = *reinterpret_cast<const unsigned short *>(blockStorage + 10);   
 
-    unsigned long temp;
+    unsigned int temp;
 
     temp = (color0 >> 11) * 255 + 16;
     unsigned char r0 = (unsigned char)((temp/32 + temp)/32);
@@ -148,7 +148,7 @@ void DecompressBlockDXT5(unsigned long x, unsigned long y, unsigned long width, 
     temp = (color1 & 0x001F) * 255 + 16;
     unsigned char b1 = (unsigned char)((temp/32 + temp)/32);
 
-    unsigned long code = *reinterpret_cast<const unsigned long *>(blockStorage + 12);
+    unsigned int code = *reinterpret_cast<const unsigned int *>(blockStorage + 12);
 
     for (int j=0; j < 4; j++)
     {
@@ -198,7 +198,7 @@ void DecompressBlockDXT5(unsigned long x, unsigned long y, unsigned long width, 
 
             unsigned char colorCode = (code >> 2*(4*j+i)) & 0x03;
 
-            unsigned long finalColor;
+            unsigned int finalColor;
             switch (colorCode)
             {
                 case 0:
@@ -223,19 +223,19 @@ void DecompressBlockDXT5(unsigned long x, unsigned long y, unsigned long width, 
 
 // void BlockDecompressImageDXT5(): Decompresses all the blocks of a DXT5 compressed texture and stores the resulting pixels in 'image'.
 //
-// unsigned long width:                 Texture width.
-// unsigned long height:                Texture height.
+// unsigned int width:                 Texture width.
+// unsigned int height:                Texture height.
 // const unsigned char *blockStorage:   pointer to compressed DXT5 blocks.
-// unsigned long *image:                pointer to the image where the decompressed pixels will be stored.
+// unsigned int *image:                pointer to the image where the decompressed pixels will be stored.
 
-void BlockDecompressImageDXT5(unsigned long width, unsigned long height, const unsigned char *blockStorage, unsigned long *image)
+void BlockDecompressImageDXT5(unsigned int width, unsigned int height, const unsigned char *blockStorage, unsigned int *image)
 {
-    unsigned long blockCountX = (width + 3) / 4;
-    unsigned long blockCountY = (height + 3) / 4;
+    unsigned int blockCountX = (width + 3) / 4;
+    unsigned int blockCountY = (height + 3) / 4;
 
-    for (unsigned long j = 0; j < blockCountY; j++)
+    for (unsigned int j = 0; j < blockCountY; j++)
     {
-        for (unsigned long i = 0; i < blockCountX; i++) DecompressBlockDXT5(i*4, j*4, width, blockStorage + i * 16, image);
+        for (unsigned int i = 0; i < blockCountX; i++) DecompressBlockDXT5(i*4, j*4, width, blockStorage + i * 16, image);
         blockStorage += blockCountX * 16;
     }
 }
