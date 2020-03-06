@@ -1,3 +1,6 @@
+#include "s3tc.h"
+namespace s3tc {
+
 // unsigned int PackRGBA(): Helper method that packs RGBA channels into a single 4 byte pixel.
 //
 // unsigned char r:     red channel.
@@ -53,36 +56,36 @@ void DecompressBlockDXT1(unsigned int x, unsigned int y, unsigned int width, con
             {
                 switch (positionCode)
                 {
-                    case 0:
-                        finalColor = PackRGBA(r0, g0, b0, 255);
-                        break;
-                    case 1:
-                        finalColor = PackRGBA(r1, g1, b1, 255);
-                        break;
-                    case 2:
-                        finalColor = PackRGBA((2*r0+r1)/3, (2*g0+g1)/3, (2*b0+b1)/3, 255);
-                        break;
-                    case 3:
-                        finalColor = PackRGBA((r0+2*r1)/3, (g0+2*g1)/3, (b0+2*b1)/3, 255);
-                        break;
+                case 0:
+                    finalColor = PackRGBA(r0, g0, b0, 255);
+                    break;
+                case 1:
+                    finalColor = PackRGBA(r1, g1, b1, 255);
+                    break;
+                case 2:
+                    finalColor = PackRGBA((2*r0+r1)/3, (2*g0+g1)/3, (2*b0+b1)/3, 255);
+                    break;
+                case 3:
+                    finalColor = PackRGBA((r0+2*r1)/3, (g0+2*g1)/3, (b0+2*b1)/3, 255);
+                    break;
                 }
             }
             else
             {
                 switch (positionCode)
                 {
-                    case 0:
-                        finalColor = PackRGBA(r0, g0, b0, 255);
-                        break;
-                    case 1:
-                        finalColor = PackRGBA(r1, g1, b1, 255);
-                        break;
-                    case 2:
-                        finalColor = PackRGBA((r0+r1)/2, (g0+g1)/2, (b0+b1)/2, 255);
-                        break;
-                    case 3:
-                        finalColor = PackRGBA(0, 0, 0, 255);
-                        break;
+                case 0:
+                    finalColor = PackRGBA(r0, g0, b0, 255);
+                    break;
+                case 1:
+                    finalColor = PackRGBA(r1, g1, b1, 255);
+                    break;
+                case 2:
+                    finalColor = PackRGBA((r0+r1)/2, (g0+g1)/2, (b0+b1)/2, 255);
+                    break;
+                case 3:
+                    finalColor = PackRGBA(0, 0, 0, 255);
+                    break;
                 }
             }
 
@@ -130,7 +133,7 @@ void DecompressBlockDXT5(unsigned int x, unsigned int y, unsigned int width, con
     unsigned short alphaCode2 = bits[0] | (bits[1] << 8);
 
     unsigned short color0 = *reinterpret_cast<const unsigned short *>(blockStorage + 8);
-    unsigned short color1 = *reinterpret_cast<const unsigned short *>(blockStorage + 10);   
+    unsigned short color1 = *reinterpret_cast<const unsigned short *>(blockStorage + 10);
 
     unsigned int temp;
 
@@ -201,18 +204,18 @@ void DecompressBlockDXT5(unsigned int x, unsigned int y, unsigned int width, con
             unsigned int finalColor;
             switch (colorCode)
             {
-                case 0:
-                    finalColor = PackRGBA(r0, g0, b0, finalAlpha);
-                    break;
-                case 1:
-                    finalColor = PackRGBA(r1, g1, b1, finalAlpha);
-                    break;
-                case 2:
-                    finalColor = PackRGBA((2*r0+r1)/3, (2*g0+g1)/3, (2*b0+b1)/3, finalAlpha);
-                    break;
-                case 3:
-                    finalColor = PackRGBA((r0+2*r1)/3, (g0+2*g1)/3, (b0+2*b1)/3, finalAlpha);
-                    break;
+            case 0:
+                finalColor = PackRGBA(r0, g0, b0, finalAlpha);
+                break;
+            case 1:
+                finalColor = PackRGBA(r1, g1, b1, finalAlpha);
+                break;
+            case 2:
+                finalColor = PackRGBA((2*r0+r1)/3, (2*g0+g1)/3, (2*b0+b1)/3, finalAlpha);
+                break;
+            case 3:
+                finalColor = PackRGBA((r0+2*r1)/3, (g0+2*g1)/3, (b0+2*b1)/3, finalAlpha);
+                break;
             }
 
             if (x + i < width)
@@ -239,4 +242,5 @@ void BlockDecompressImageDXT5(unsigned int width, unsigned int height, const uns
         blockStorage += blockCountX * 16;
     }
 }
+};
 
