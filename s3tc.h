@@ -1,10 +1,14 @@
 #ifndef S3TC_H
 #define S3TC_H
 
+#if _MSC_VER
 #if defined(S3TC_LIB)
 #  define S3TC_LIB_EXPORT __declspec(dllexport)
 #else
 #  define S3TC_LIB_EXPORT __declspec(dllimport)
+#endif
+#else
+#define S3TC_LIB_EXPORT
 #endif
 
 
