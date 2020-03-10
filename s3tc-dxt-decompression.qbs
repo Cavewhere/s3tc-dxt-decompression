@@ -22,4 +22,10 @@ DynamicLibrary {
         cpp.includePaths: ["."]
     }
 
+    Group {
+        fileTagsFilter: ["dynamiclibrary"]
+        condition: qbs.buildVariant == "release"
+        qbs.install: qbs.targetOS.contains("windows")
+    }
+
 }
