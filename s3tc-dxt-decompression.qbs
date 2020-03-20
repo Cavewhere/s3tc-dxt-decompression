@@ -4,6 +4,7 @@ DynamicLibrary {
 //    readonly property string rpath: buildDirectory
 
     Depends { name: "cpp" }
+    Depends { name: "bundle" }
 
     files: [
         "*.h",
